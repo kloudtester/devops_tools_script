@@ -1,0 +1,32 @@
+pool: "Default"
+trigger:
+  - main 
+stages:
+  - stage: mavenstage
+    displayName: mavenbuild
+    jobs:
+      - job: firstjob 
+        displayName: buildjob
+        steps:
+          - task: Maven@3
+            inputs:
+              mavenPOMFile: 'pom.xml'
+              goals: 'package'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              javaHomeOption: 'path'
+              jdkDirectory: '/usr/lib/jvm/java-1.17.0-openjdk-amd64'
+              jdkVersionOption: '1.17'
+  - stage: sonarqubesatge
+    displayName: sonarqube
+    jobs:
+      - job: secondjob
+        displayName:
+        steps:
+          - task: SonarQubePrepare@5
+            inputs:
+              SonarQube: 'http://13.234.29.234:8081'
+              scannerMode: 'MSBuild'
+              projectName: 'spring-pet-clinic'
+        
+
